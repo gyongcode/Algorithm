@@ -1,48 +1,48 @@
 import java.util.*;
 
 class Solution {
-        
+    static HashSet<Integer>[] sets;
     
     public int solution(int N, int number) {
-        ArrayList<HashSet<Integer>> list = new ArrayList<>();
-        if(N == number)
-            return 1;
+        sets = new HashSet[9];
         
         for(int i=0; i<9; i++){
-            list.add(new HashSet<>());
+            sets[i] = new HashSet<>();
         }
         
-        list.get(1).add(N);
+        if(number == N)
+            return 1;
+        sets[1].add(N);
         
-        
-        for(int i = 2; i<9; i++){
-            HashSet<Integer> cur = list.get(i);
+        for(int i=2; i<9; i++){
+            int tmp = 0;
+            for(int j=0; j<i; j++)
+                tmp = tmp*10 + N;
+            sets[i].add(tmp);
             
             for(int j = 1; j<i; j++){
-                Set<Integer> preSet = list.get(j);
-                Set<Integer> postSet = list.get(i-j);
-                
-                for(int pre : preSet){
-                    for(int post : postSet){
-                        cur.add(pre + post);
-                        cur.add(pre - post);
-                        cur.add(pre * post);
-                        
-                        if(pre != 0 && post != 0){
-                            cur.add(pre/post);
-                        }
+                for(int k : sets[j]){
+                    for(int m : sets[i-j]){
+                        sets[i].add(k*m);
+                        sets[i].add(k+m);
+                        sets[i].add(k-m);
+                        if(m != 0)
+                            sets[i].add(k/m);
                     }
                 }
-                
             }
             
-            cur.add(Integer.parseInt(String.valueOf(N).repeat(i)));
-            
-            if(cur.contains(number))
+            if(sets[i].contains(number))
                 return i;
         }
+        
         return -1;
     }
     
-    
 }
+
+/*
+5
+
+55, 1 (5/ 5) , 10 (5+5), 0 (5-5), 25  (5*5)
+*/
