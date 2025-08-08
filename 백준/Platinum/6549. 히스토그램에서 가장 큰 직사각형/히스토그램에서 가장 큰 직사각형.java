@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -25,60 +26,37 @@ public class Main {
                 arr[i] = Long.parseLong(st.nextToken());
             }
 
-            System.out.println(get_area(0, N - 1));
+            System.out.println(get_area());
         }
 
     }
 
 
-    public static long get_area(int l, int h) {
-        if (l == h) {
-            return arr[l];
-        }
+    public static long get_area() {
+        long max = 0;
 
-        int mid = (l + h) / 2;
+        ArrayDeque<Integer> stack = new ArrayDeque<>();
+        for (int i = 0; i < N; i++) {
 
-        long leftArea = get_area(l, mid);
-        long rightArea = get_area(mid + 1, h);
-        long midArea = get_midArea(l, h, mid);
+            while (!stack.isEmpty() && arr[stack.getLast()] >= arr[i]) {
+                long height = arr[stack.removeLast()];
+                long width = stack.isEmpty() ? i : (i - 1 - stack.getLast());
 
-        return Math.max(leftArea, Math.max(rightArea, midArea));
-    }
-
-    public static long get_midArea(int l, int h, int mid) {
-        int toLeft = mid;
-        int toRight = mid;
-
-        long height = arr[mid];
-        long maxArea = arr[mid];
-
-        while (toLeft > l && toRight < h) {
-            if (arr[toLeft - 1] < arr[toRight + 1]) {
-                toRight++;
-                height = Math.min(height, arr[toRight]);
-            } else {
-                toLeft--;
-                height = Math.min(height, arr[toLeft]);
+                max = Math.max(max, height * width);
             }
 
-            maxArea = Math.max(maxArea, (toRight - toLeft + 1) * height);
+            stack.addLast(i);
         }
 
-        while (toRight < h) {
-            toRight++;
-            height = Math.min(height, arr[toRight]);
+        while (!stack.isEmpty()) {
+            long height = arr[stack.removeLast()];
+            long width = stack.isEmpty() ? N : (N - 1 - stack.getLast());
 
-            maxArea = Math.max(maxArea, (toRight - toLeft + 1) * height);
+            max = Math.max(max, height * width);
         }
 
-        while (toLeft > l) {
-            toLeft--;
-            height = Math.min(height, arr[toLeft]);
-
-            maxArea = Math.max(maxArea, (toRight - toLeft + 1) * height);
-        }
-
-        return maxArea;
+        return max;
     }
+
 
 }
