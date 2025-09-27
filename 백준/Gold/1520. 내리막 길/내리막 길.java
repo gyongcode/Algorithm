@@ -6,8 +6,8 @@ import java.util.StringTokenizer;
 public class Main {
 
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    static int[][] map, dp;
     static int N, M;
+    static int[][] map, dp;
     static int[] dx = {1, -1, 0, 0}, dy = {0, 0, 1, -1};
 
     public static void main(String[] args) throws IOException {
@@ -21,7 +21,6 @@ public class Main {
 
         for (int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
-
             for (int j = 0; j < M; j++) {
                 map[i][j] = Integer.parseInt(st.nextToken());
                 dp[i][j] = -1;
@@ -31,25 +30,26 @@ public class Main {
         System.out.println(dfs(0, 0));
     }
 
+
     static int dfs(int x, int y) {
-        if (x == N - 1 && y == M - 1) {
+        if (N - 1 == x && M - 1 == y) {
             return 1;
         }
 
-        if (dp[x][y] == -1) {
-            dp[x][y] = 0;
+        if (dp[x][y] != -1) {
+            return dp[x][y];
+        }
 
-            for (int i = 0; i < 4; i++) {
-                int newx = x + dx[i];
-                int newy = y + dy[i];
+        dp[x][y] = 0;
+        for (int i = 0; i < 4; i++) {
+            int newx = x + dx[i];
+            int newy = y + dy[i];
+            if (newx < 0 || newx >= N || newy < 0 || newy >= M) {
+                continue;
+            }
 
-                if (newx < 0 || newx >= N || newy < 0 || newy >= M) {
-                    continue;
-                }
-
-                if (map[x][y] > map[newx][newy]) {
-                    dp[x][y] += dfs(newx, newy);
-                }
+            if (map[x][y] > map[newx][newy]) {
+                dp[x][y] += dfs(newx, newy);
             }
         }
 
