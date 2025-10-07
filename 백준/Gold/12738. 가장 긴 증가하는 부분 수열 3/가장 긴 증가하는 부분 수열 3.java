@@ -46,7 +46,7 @@ public class Main {
             }
         }
 
-        return right;
+        return left;
     }
 
 }
