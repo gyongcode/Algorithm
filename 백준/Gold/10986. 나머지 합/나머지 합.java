@@ -10,37 +10,32 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         StringTokenizer st = new StringTokenizer(br.readLine());
-
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
 
-        long cnt = 0;
-        int[] C = new int[M];
         st = new StringTokenizer(br.readLine());
-
-        int sum = 0;
-        for (int i = 0; i < N; i++) {
-            int n = Integer.parseInt(st.nextToken()) % M;
-
-            if (i == 0) {
-                sum = n;
-            } else {
-                sum = (sum + n) % M;
-            }
-
-            if (sum == 0) {
-                cnt++;
-            }
-            C[sum]++;
+        int[] arr = new int[N + 1];
+        for (int i = 1; i < N + 1; i++) {
+            arr[i] = (arr[i - 1] + Integer.parseInt(st.nextToken())) % M;
         }
 
-        for (int i = 0; i < M; i++) {
-            if (C[i] > 1) {
-                cnt += (long) C[i] * (C[i] - 1) / 2;
+        long res = 0;
+        long[] cnt = new long[M];
+
+        for (int i = 1; i < N + 1; i++) {
+            if (arr[i] == 0) {
+                res++;
+            }
+            cnt[arr[i]]++;
+        }
+
+        for (long i : cnt) {
+            if (i >= 2) {
+                res += i * (i - 1) / 2;
             }
         }
 
-        System.out.println(cnt);
+        System.out.println(res);
     }
-
 }
+
